@@ -97,7 +97,7 @@
 				<div class="row">
 					<label for="default_pass" style="color: #0e1526">Enter
 						default password (provide it to the user)*:</label><br /> <input
-						id="default_pass" class="input" name="default_pass" type="text"
+						id="default_pass" class="input" name="default_pass" type="password"
 						value="" size="50" /><br />
 				</div>
 				<%
@@ -145,6 +145,18 @@
 							}
 					%>
 					<p style='color: blue; font-size: 100%;'><%=secret%></p>
+					<%
+						}
+					%>
+					<br />
+					<%
+						if (null != request.getAttribute("barcodePath")) {
+							String path = (String) request.getAttribute("barcodePath");
+							if (path == null) {
+								path = "";
+							}
+					%>
+					<img id="image" src=<%=path%> width="250px" alt="QR code" />
 					<%
 						}
 					%>

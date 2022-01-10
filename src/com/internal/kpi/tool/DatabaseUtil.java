@@ -183,8 +183,7 @@ public class DatabaseUtil {
 		return team;
 	}
 
-	public static String addNewUser(DBConnection conn, User userToAdd) throws Exception {
-		String secretKey = SecondFactorAuthenticator.generateSecretKey();
+	public static void addNewUser(DBConnection conn, User userToAdd, String secretKey) throws Exception {
 		SecureData secureSecretKey = new SecureData(secretKey);
 		List<String> queryParams = new ArrayList<String>();
 		String insertUser = "INSERT INTO users(first_name, last_name, role, email, pass, permissions, secret_key) values(?,?,?,?,?,?,?)";
@@ -200,7 +199,6 @@ public class DatabaseUtil {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return secretKey;
 	}
 	
 	public static void addRelationUserTeam(DBConnection conn, User userToAdd) {

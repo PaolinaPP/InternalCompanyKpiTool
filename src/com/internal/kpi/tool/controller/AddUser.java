@@ -1,5 +1,6 @@
 package com.internal.kpi.tool.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.internal.kpi.tool.DBConnection;
 import com.internal.kpi.tool.DatabaseUtil;
+import com.internal.kpi.tool.SecondFactorAuthenticator;
 import com.internal.kpi.tool.VerifyData;
 import com.internal.kpi.tool.model.User;
 
@@ -22,6 +24,7 @@ public class AddUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private DBConnection conn = DBConnection.getInstance();
 	private User userToAdd;
+	private String filePath = "F:\\QRcodes\\";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -50,7 +53,7 @@ public class AddUser extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String secret = "";
+		String secretKey = "";
 		userToAdd = new User(request.getParameter("first_name"), request.getParameter("last_name"),
 				request.getParameter("role"), request.getParameter("email"),
 				DatabaseUtil.hashPassword(request.getParameter("default_pass")), request.getParameter("permissions"));
@@ -59,13 +62,22 @@ public class AddUser extends HttpServlet {
 				&& VerifyData.isValidString(userToAdd.getLastName()) && VerifyData.isValidString(userToAdd.getRole())
 				&& VerifyData.isValidPassword(request.getParameter("default_pass"))) {
 			try {
-				secret = DatabaseUtil.addNewUser(conn, userToAdd);
+				secretKey = SecondFactorAuthenticator.generateSecretKey();
+				String authBarCode = SecondFactorAuthenticator.getGoogleAuthenticatorBarCode(secretKey, userToAdd.getEmail(), "KPITool");
+				System.out.println(authBarCode);
+				File directory = new File(filePath.concat(userToAdd.getEmail()));
+			    if (! directory.exists()){
+			        directory.mkdir();
+			    }
+				SecondFactorAuthenticator.createQRCode(authBarCode, filePath.concat(userToAdd.getEmail())+"\\qr_code.png", 50, 50);
+				DatabaseUtil.addNewUser(conn, userToAdd, secretKey);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			DatabaseUtil.addRelationUserTeam(conn, userToAdd);
-			request.setAttribute("secret", secret);
+			request.setAttribute("secret", secretKey);
+			request.setAttribute("barcodePath", filePath.concat(userToAdd.getEmail())+"\\qr_code.png");
 		} else {
 			if (!VerifyData.isValidEmail(userToAdd.getEmail())) {
 				request.setAttribute("emailError", "Email should includes letters and numbers, @ and .");
