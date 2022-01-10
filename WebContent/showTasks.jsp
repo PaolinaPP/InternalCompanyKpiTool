@@ -60,8 +60,8 @@
 
 							<%
 								ArrayList tasks = (ArrayList) request.getAttribute("tasks");
-																	for (int i = 0; i < tasks.size(); i++) {
-																		Task task = (Task) tasks.get(i);
+								for (int i = 0; i < tasks.size(); i++) {
+									Task task = (Task) tasks.get(i);
 							%>
 							<tr>
 								<td><%=task.getName()%></td>

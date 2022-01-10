@@ -69,7 +69,7 @@ public class AddUser extends HttpServlet {
 			    if (! directory.exists()){
 			        directory.mkdir();
 			    }
-				SecondFactorAuthenticator.createQRCode(authBarCode, filePath.concat(userToAdd.getEmail())+"\\qr_code.png", 50, 50);
+				SecondFactorAuthenticator.createQRCode(authBarCode, filePath.concat(userToAdd.getEmail())+"\\qr_code.png", 250, 250);
 				DatabaseUtil.addNewUser(conn, userToAdd, secretKey);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

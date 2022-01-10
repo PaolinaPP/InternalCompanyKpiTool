@@ -74,7 +74,7 @@
 						ArrayList teamNames = (ArrayList) request.getAttribute("teamNames");
 						String teamName = (String) request.getAttribute("teamName");
 					%>
-					<label for="manager" style="color: #0e1526">Change manager
+					<label for="team" style="color: #0e1526">Change team
 						(Current: <%=teamName%>):
 					</label><br /> <select name="team" id="team" class="dropdown">
 						<option value=""></option>

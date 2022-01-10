@@ -144,7 +144,7 @@
 								secret = "";
 							}
 					%>
-					<p style='color: blue; font-size: 100%;'><%=secret%></p>
+					<p style='color: blue; font-size: 100%;'>Secret: <%=secret%></p>
 					<%
 						}
 					%>
@@ -156,7 +156,7 @@
 								path = "";
 							}
 					%>
-					<img id="image" src=<%=path%> width="250px" alt="QR code" />
+					<p style='color: blue; font-size: 100%;'>QR code location: <%=path%></p>
 					<%
 						}
 					%>

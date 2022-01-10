@@ -329,7 +329,7 @@ public class DatabaseUtil {
 			while (rs.next()) {
 				task = new Task(rs.getInt("id"), rs.getString("name"), rs.getString("description"),
 						rs.getInt("owner_id"), getGoal(conn, rs.getInt("goal_id")), rs.getString("queue_number"),
-						getTeam(conn, rs.getInt("team_id")));
+						getTeam(conn, rs.getInt("owner_id")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -453,6 +453,7 @@ public class DatabaseUtil {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		System.out.println(team.getName());
 		return team;
 	}
 	

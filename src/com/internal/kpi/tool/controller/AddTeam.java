@@ -44,12 +44,11 @@ public class AddTeam extends HttpServlet {
 		newTeam = new Team(request.getParameter("name"), DatabaseUtil.getUserId(conn, request.getParameter("manager")));
 		if(VerifyData.isValidString(newTeam.getName())) {
 			DatabaseUtil.addNewTeam(conn, newTeam);
-			response.sendRedirect("addTeam.jsp");
 		} else {
 			request.setAttribute("error", "Please enter value which includes only letters and spaces.");
-			request.setAttribute("managers", DatabaseUtil.getAllManagers(conn));
-			RequestDispatcher dispatcher = request.getRequestDispatcher("addTeam.jsp");
-			dispatcher.forward(request, response);
 		}
+		request.setAttribute("managers", DatabaseUtil.getAllManagers(conn));
+		RequestDispatcher dispatcher = request.getRequestDispatcher("addTeam.jsp");
+		dispatcher.forward(request, response);
 	}
 }

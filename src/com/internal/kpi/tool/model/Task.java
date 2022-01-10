@@ -94,6 +94,12 @@ public class Task {
 		this.team = team;
 	}
 
+	@Override
+	public String toString() {
+		return "Task [id=" + id + ", name=" + name + ", description=" + description + ", ownerId=" + ownerId + ", goal="
+				+ goal + ", team=" + team + ", queueNumber=" + queueNumber + ", ownerEmail=" + ownerEmail + "]";
+	}
+
 	
 
 }

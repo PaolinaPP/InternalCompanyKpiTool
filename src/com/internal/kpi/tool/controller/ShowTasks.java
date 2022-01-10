@@ -29,7 +29,7 @@ public class ShowTasks extends HttpServlet {
 			throws ServletException, IOException {
 		tasks.clear();
 		String userEmail = (String) request.getSession().getAttribute("http.proxyUser");
-		getUser(userEmail);
+		user = DatabaseUtil.getUserByEmail(conn, userEmail);
 		request.setAttribute("userPermissions", user.getPermissions());
 		if (user.getPermissions().equals("manager")) {
 			listTasksManager(request, response, user.getId());
@@ -46,23 +46,6 @@ public class ShowTasks extends HttpServlet {
 			throws ServletException, IOException {
 	}
 
-	private void getUser(String email) {
-		String selectQuery = "select * from users where email=?";
-		List<String> queryParams = new ArrayList<String>();
-		ResultSet rs = null;
-		queryParams.add(email);
-		try {
-			rs = conn.query(selectQuery, queryParams);
-			while (rs.next()) {
-				user = new User(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name"),
-						rs.getString("role"), rs.getString("email"), rs.getString("pass"), rs.getString("permissions"),
-						rs.getString("secret_key"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
 	private void listTasksTeamMember(HttpServletRequest request, HttpServletResponse response, int userId)
 			throws ServletException, IOException {
 		List<String> queryParams = new ArrayList<String>();
@@ -74,7 +57,7 @@ public class ShowTasks extends HttpServlet {
 			while (rs.next()) {
 				Task task = new Task(rs.getInt("id"), rs.getString("name"), rs.getString("description"),
 						rs.getInt("owner_id"), DatabaseUtil.getGoal(conn, rs.getInt("goal_id")), rs.getString("queue_number"),
-						DatabaseUtil.getTeamById(conn, rs.getInt("team_id")));
+						DatabaseUtil.getTeamById(conn, rs.getInt("owner_id")));
 				task.setOwnerEmail(DatabaseUtil.getUser(conn, task.getOwnerId()).getEmail());
 				tasks.add(task);
 			}
@@ -97,7 +80,7 @@ public class ShowTasks extends HttpServlet {
 			while (rs.next()) {
 				Task task = new Task(rs.getInt("id"), rs.getString("name"), rs.getString("description"),
 						rs.getInt("owner_id"), DatabaseUtil.getGoal(conn, rs.getInt("goal_id")), rs.getString("queue_number"),
-						DatabaseUtil.getTeamById(conn, rs.getInt("team_id")));
+						DatabaseUtil.getTeamById(conn, rs.getInt("owner_id")));
 				task.setOwnerEmail(DatabaseUtil.getUser(conn, task.getOwnerId()).getEmail());
 				tasks.add(task);
 			}

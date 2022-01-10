@@ -49,17 +49,16 @@ public class EditUser extends HttpServlet {
 		String teamName = null;
 		List<String> teamNames = DatabaseUtil.getAllTeams(conn);
 		try {
-			DatabaseUtil.getUser(conn, id);
+			existingUser= DatabaseUtil.getUser(conn, id);
 			teamName = DatabaseUtil.getTeamName(conn, id);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("edit.jsp");
-			request.setAttribute("user", existingUser);
-			request.setAttribute("teamNames", teamNames);
-			request.setAttribute("teamName", teamName);
-			dispatcher.forward(request, response);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		RequestDispatcher dispatcher = request.getRequestDispatcher("edit.jsp");
+		request.setAttribute("user", existingUser);
+		request.setAttribute("teamNames", teamNames);
+		request.setAttribute("teamName", teamName);
+		dispatcher.forward(request, response);
 	}
 
 	/**
@@ -71,7 +70,9 @@ public class EditUser extends HttpServlet {
 		userToEdit = new User(request.getParameter("first_name"), request.getParameter("last_name"),
 				request.getParameter("role"), request.getParameter("email"),
 				DatabaseUtil.hashPassword(request.getParameter("default_pass")), request.getParameter("permissions"));
-		userToEdit.setTeam(DatabaseUtil.getTeam(conn, request.getParameter("team")));
+		if(!request.getParameter("team").isEmpty()) {
+			userToEdit.setTeam(DatabaseUtil.getTeam(conn, request.getParameter("team")));
+		}
 		checkForUpdates();
 		DatabaseUtil.editUser(conn, userToEdit, existingUser);
 		DatabaseUtil.editRelationUserTeam(conn, userToEdit, existingUser);
